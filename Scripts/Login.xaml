@@ -1,0 +1,26 @@
+﻿<Page x:Class="ProtectionApp.Scripts.Login"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ProtectionApp.Scripts"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Login">
+
+    <Grid>
+        <StackPanel Margin="10"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <TextBlock FontSize="30"
+                       Text="Input code"/>
+            <TextBox x:Name="TBid"
+                     
+                     FontSize="30"/>
+            <Button x:Name="Blogin"
+                    Click="Blogin_Click"
+                    FontSize="30"
+                    Content="Enter"/>
+        </StackPanel>
+    </Grid>
+</Page>
