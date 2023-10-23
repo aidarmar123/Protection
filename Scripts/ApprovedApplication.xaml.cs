@@ -53,7 +53,7 @@ namespace ProtectionApp.Scripts
                     }
                     catch
                     {
-                        MessageBox.Show("Data not save")
+                        MessageBox.Show("Data not save");
                     }
                    
                 }
@@ -68,8 +68,8 @@ namespace ProtectionApp.Scripts
                     }
                     catch
                     {
-                        MessageBox.Show("Data not save")
-                    }
+                        MessageBox.Show("Data not save");
+                    };
 
                 }
                 else

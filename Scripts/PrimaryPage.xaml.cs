@@ -41,39 +41,50 @@ namespace ProtectionApp.Scripts
             if (DGAllApplication.SelectedItem is User user)
             { 
                 Maneger.MainFrame.Navigate(new EditPage(user));
+                App.DB.User.Remove(user);
             }
         }
 
         private void BSearch_Click(object sender, RoutedEventArgs e)
         {
-
-            List<User> NewUser = new List<User>();
-            StringBuilder erors = new StringBuilder();
-            if (TBSearch.Text == null)
+            List<User> ListUsers = new List<User>();
+            List<User> NewUser = App.DB.User.ToList();
+           
+            if (TBSearch.Text != null)
             {
-                erors.Append("Line is null");
-            }
-            else if (App.DB.User.FirstOrDefault(x => x.Name == TBSearch.Text || x.Sename == TBSearch.Text || x.Surname== TBSearch.Text) != null)
-            {
-                List<User> ListUsers = App.DB.User.ToList();
-                for (int i = 0; i < ListUsers.Count; i++)
+                for (int i = 0; i < NewUser.Count; i++)
                 {
-                    if (ListUsers[i].Name == TBSearch.Text|| ListUsers[i].Surname== TBSearch.Text|| ListUsers[i].Sename== TBSearch.Text)
+                    string userText = (NewUser[i].Name + NewUser[i].Sename + NewUser[i].Surname).ToLower().Replace(" ", "");
+                    string inputText = TBSearch.Text.ToLower().Replace(" ", "");
+                    if (userText == inputText)
                     {
-                        NewUser.Add(ListUsers[i]);
-                    }
+                        ListUsers.Add(NewUser[i]);
+                    };
+                };
+                if (ListUsers.Count == 0)
+                {
+                        for (int i = 0; i < NewUser.Count; i++)
+                        {
+                            if (NewUser[i].Name == TBSearch.Text || NewUser[i].Surname == TBSearch.Text || NewUser[i].Sename == TBSearch.Text)
+                            {
+                                ListUsers.Add(NewUser[i]);
+                            };
+                        };
+                };
+                if (ListUsers.Count > 0)
+                {
+                    DGAllApplication.ItemsSource = ListUsers;
+                    BGoBack.Visibility = Visibility;
                 }
-                DGAllApplication.ItemsSource = NewUser;
-                BGoBack.Visibility = Visibility;
-
+                else
+                {
+                    MessageBox.Show("User not founted");
+                    TBSearch.Text = "";
+                }
             }
             else
             {
-                erors.Append("User is not found");
-            }
-            if (erors.Length > 1)
-            {
-                MessageBox.Show(erors.ToString());
+                MessageBox.Show("Line is null");
             }
         }
 
@@ -81,6 +92,7 @@ namespace ProtectionApp.Scripts
         private void BGoBack_Click(object sender, RoutedEventArgs e)
         {
             Refresh();
+            TBSearch.Text = "";
             BGoBack.Visibility = Visibility.Hidden;
         }
        
