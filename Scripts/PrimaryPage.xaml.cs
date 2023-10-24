@@ -42,7 +42,7 @@ namespace ProtectionApp.Scripts
         {
             if (DGAllApplication.SelectedItem is User user)
             {
-                App.DB.User.Remove(user);
+                
                 Maneger.MainFrame.Navigate(new EditPage(user));
                 
             }

@@ -25,7 +25,7 @@ namespace ProtectionApp
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new PrimaryPage());
+            MainFrame.Navigate(new Login());
             Maneger.MainFrame = MainFrame;
         }
     }
