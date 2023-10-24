@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ProtectionApp.Models;
 using ProtectionApp.Classes;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace ProtectionApp.Scripts
 {
@@ -30,6 +31,7 @@ namespace ProtectionApp.Scripts
            
 
         }
+      
 
         private void BWatchApplication_Click(object sender, RoutedEventArgs e)
         {
@@ -39,30 +41,62 @@ namespace ProtectionApp.Scripts
         private void BEdit_Click(object sender, RoutedEventArgs e)
         {
             if (DGAllApplication.SelectedItem is User user)
-            { 
-                Maneger.MainFrame.Navigate(new EditPage(user));
+            {
                 App.DB.User.Remove(user);
+                Maneger.MainFrame.Navigate(new EditPage(user));
+                
             }
         }
 
         private void BSearch_Click(object sender, RoutedEventArgs e)
         {
+
             List<User> ListUsers = new List<User>();
             List<User> NewUser = App.DB.User.ToList();
-           
-            if (TBSearch.Text != null)
+            if (TBSearch.Text != "" | DPSourseDate.SelectedDate != null)
             {
-                for (int i = 0; i < NewUser.Count; i++)
+                string inputText = TBSearch.Text.ToLower().Replace(" ", "");
+                if (TBSearch.Text != "" && DPSourseDate.SelectedDate != null)
                 {
-                    string userText = (NewUser[i].Name + NewUser[i].Sename + NewUser[i].Surname).ToLower().Replace(" ", "");
-                    string inputText = TBSearch.Text.ToLower().Replace(" ", "");
-                    if (userText == inputText)
+                   
+                    ListUsers = new List<User>();
+                    for (int i = 0; i < NewUser.Count; i++)
                     {
-                        ListUsers.Add(NewUser[i]);
+                        string userText = (NewUser[i].Name + NewUser[i].Sename + NewUser[i].Surname).ToLower().Replace(" ", "");
+                       
+                        if (userText == inputText & NewUser[i].Date==DPSourseDate.SelectedDate)
+                        {
+                            ListUsers.Add(NewUser[i]);
+                        };
+                    }; 
+                    if (ListUsers.Count==0)
+                    {
+                        for (int i = 0; i < NewUser.Count; i++)
+                        {
+                            if(NewUser[i].Name == TBSearch.Text || NewUser[i].Surname == TBSearch.Text || NewUser[i].Sename == TBSearch.Text)
+                            {
+                                if (DPSourseDate.SelectedDate == NewUser[i].Date)
+                                {
+                                    ListUsers.Add(NewUser[i]);
+                                }
+                            };
+                        };
                     };
                 };
-                if (ListUsers.Count == 0)
+                if (TBSearch.Text != "" && DPSourseDate.SelectedDate==null)
                 {
+                    ListUsers = new List<User>();
+                    for (int i = 0; i < NewUser.Count; i++)
+                    {
+                        string userText = (NewUser[i].Name + NewUser[i].Sename + NewUser[i].Surname).ToLower().Replace(" ", "");
+                        
+                        if (userText == inputText)
+                        {
+                            ListUsers.Add(NewUser[i]);
+                        };
+                    };
+                    if (ListUsers.Count == 0)
+                    {
                         for (int i = 0; i < NewUser.Count; i++)
                         {
                             if (NewUser[i].Name == TBSearch.Text || NewUser[i].Surname == TBSearch.Text || NewUser[i].Sename == TBSearch.Text)
@@ -70,8 +104,22 @@ namespace ProtectionApp.Scripts
                                 ListUsers.Add(NewUser[i]);
                             };
                         };
+                    };
                 };
-                if (ListUsers.Count > 0)
+
+                if (DPSourseDate.SelectedDate != null && TBSearch.Text =="")
+                {
+                    ListUsers = new List<User>();
+                    for (int i = 0; i < NewUser.Count; i++)
+                    {
+                        if (NewUser[i].Date == DPSourseDate.SelectedDate)
+                        {
+                            ListUsers.Add(NewUser[i]);
+                        }
+                    }
+                };
+
+                if (ListUsers.Count>0 )
                 {
                     DGAllApplication.ItemsSource = ListUsers;
                     BGoBack.Visibility = Visibility;
@@ -79,7 +127,7 @@ namespace ProtectionApp.Scripts
                 else
                 {
                     MessageBox.Show("User not founted");
-                    TBSearch.Text = "";
+                 
                 }
             }
             else
@@ -93,6 +141,7 @@ namespace ProtectionApp.Scripts
         {
             Refresh();
             TBSearch.Text = "";
+            DPSourseDate.SelectedDate = null;
             BGoBack.Visibility = Visibility.Hidden;
         }
        

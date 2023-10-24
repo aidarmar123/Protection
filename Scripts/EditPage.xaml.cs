@@ -24,12 +24,15 @@ namespace ProtectionApp.Scripts
     public partial class EditPage : Page
     {
         public User newUser = new User();
+        bool IsEdit = false;
         public EditPage(User selectedUser)
         {
             InitializeComponent();
+            
             State.ItemsSource = App.DB.State.ToList();
             if (selectedUser != null)
             {
+                IsEdit = true;
                 newUser = selectedUser;
                 TBName.Text = newUser.Name;
                 TBSename.Text = newUser.Sename;
@@ -61,7 +64,7 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).StateId = State.SelectedIndex + 1;
                 };
             }
-            else if (TBName.Text != null)
+            else if (TBName.Text != "")
             {
                 if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
                 {
@@ -72,7 +75,7 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).Name = TBName.Text;
                 };
             }
-            else if (TBSename.Text != null)
+            else if (TBSename.Text != "")
             {
                 if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
                 {
@@ -83,7 +86,7 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).Sename = TBSename.Text;
                 };
             }
-            else if (TBSurname.Text != null)
+            else if (TBSurname.Text != "")
             {
                 if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
                 {
@@ -98,7 +101,10 @@ namespace ProtectionApp.Scripts
             {
                 MessageBox.Show("Not all line are filled");
             };
-            App.DB.User.Add(newUser);
+            if (!IsEdit)
+            {
+                App.DB.User.Add(newUser);
+            }
             try
             {
                 App.DB.SaveChanges();

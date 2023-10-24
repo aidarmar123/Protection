@@ -26,14 +26,15 @@
             <TextBlock Text="Input Name, Sename or Surname : "/>
             <TextBox Width="250"
                      x:Name="TBSearch"/>
+            <DatePicker x:Name="DPSourseDate"/>
             <Button x:Name="BSearch"
                     Click="BSearch_Click"
                     Content="Search"/>
+               
             <Button x:Name="BGoBack"
                     Click="BGoBack_Click"
                     Content="Go Back"
                     Visibility="Hidden"/>
-           
         </StackPanel>
         <DataGrid x:Name="DGAllApplication"
                   AutoGenerateColumns="False"
