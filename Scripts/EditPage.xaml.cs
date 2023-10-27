@@ -43,8 +43,9 @@ namespace ProtectionApp.Scripts
 
         private void BSave_Click(object sender, RoutedEventArgs e)
         {
+            StringBuilder errors= new StringBuilder();
 
-            if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
+            if (!IsEdit)
             {
                 newUser.VisitPurpose = TBVisitPurpose.Text;
             }
@@ -55,7 +56,7 @@ namespace ProtectionApp.Scripts
 
             if (State.SelectedItem != null)
             {
-                if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
+                if (!IsEdit)
                 {
                     newUser.StateId = State.SelectedIndex+1 ;
                 }
@@ -64,9 +65,13 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).StateId = State.SelectedIndex + 1;
                 };
             }
-            else if (TBName.Text != "")
+            else
             {
-                if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
+                errors.Append("State is not founded");
+            };
+            if (TBName.Text != "")
+            {
+                if (!IsEdit)
                 {
                     newUser.Name = TBName.Text;
                 }
@@ -75,9 +80,13 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).Name = TBName.Text;
                 };
             }
-            else if (TBSename.Text != "")
+            else
             {
-                if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
+                errors.Append("Name is not founded");
+            };
+            if (TBSename.Text != "")
+            {
+                if (!IsEdit)
                 {
                     newUser.Sename = TBSename.Text;
                 }
@@ -86,9 +95,13 @@ namespace ProtectionApp.Scripts
                     App.DB.User.FirstOrDefault(x => x.id == newUser.id).Sename = TBSename.Text;
                 };
             }
-            else if (TBSurname.Text != "")
+            else
             {
-                if (App.DB.User.FirstOrDefault(x => x.id == newUser.id) == null)
+                errors.Append("Sename is not founted");
+            };
+            if (TBSurname.Text != "")
+            {
+                if (!IsEdit)
                 {
                     newUser.Surname = TBSurname.Text;
                 }
@@ -99,20 +112,28 @@ namespace ProtectionApp.Scripts
             }
             else
             {
-                MessageBox.Show("Not all line are filled");
+                errors.Append("Surname is not founted");
             };
-            if (!IsEdit)
+            if(errors.Length==0)
             {
-                App.DB.User.Add(newUser);
+                if (!IsEdit)
+                {
+                    newUser.Date = DateTime.Now;
+                    App.DB.User.Add(newUser);
+                }
+                try
+                {
+                    App.DB.SaveChanges();
+                    Maneger.MainFrame.GoBack();
+                }
+                catch
+                {
+                    MessageBox.Show("Data not save");
+                }
             }
-            try
+            else
             {
-                App.DB.SaveChanges();
-                Maneger.MainFrame.GoBack();
-            }
-            catch
-            {
-                MessageBox.Show("Data not save");
+                MessageBox.Show(errors.ToString());
             }
         }
     }
